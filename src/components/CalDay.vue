@@ -1,15 +1,16 @@
 <template>
-    <div class="day">
-        <ion-list>
-            <ion-list-header>
-                <ion-text>
-                    {{ dayOfWeek }}
-                </ion-text>
-            </ion-list-header>
-            <ion-item v-for="c in classes[todayKey]" :key="c.start">
-                <ion-text>
-                    {{c.name}}
-                </ion-text>
+    <div class="cal-day">
+        <ScheduledClass v-for="course in daysClasses(date)"
+                        :key="course.id"
+                        :course="course"
+        ></ScheduledClass>
+        <ion-grid>
+            <ion-row>
+                <ion-col></ion-col>
+            </ion-row>
+        </ion-grid>
+        <ion-list class="day">
+            <ion-item class="hour" v-for="hour in hours" :key="hour">
             </ion-item>
         </ion-list>
     </div>
@@ -18,46 +19,51 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {mapState} from "vuex";
-import {IonList, IonListHeader, IonText} from "@ionic/vue";
-
-const weekDays = [
-    'Montag',
-    'Dienstag',
-    'Mitwoch',
-    'Donnerstag',
-    'Freitag',
-    'Samstag',
-    'Sonnetag',
-]
+import {IonList} from "@ionic/vue";
+import ScheduledClass from '@/components/ScheduledClass.vue';
 
 export default defineComponent({
     name: 'CalDay',
     props: ['date'],
     computed: {
-        ...mapState({
-            classes: (state) => (state as any).classes,
-        }),
-        todayKey(): string {
-            return this.date.toDateString();
+        ...mapState(['courses', 'endDayHour', 'startDayHour']),
+        hours(): string[] {
+            const hours = new Array(this.endDayHour - this.startDayHour)
+            for (let i = 0; this.startDayHour + i <= this.endDayHour; i++) {
+                hours[i] = this.startDayHour + i;
+            }
+            return hours;
         },
-        dayOfWeek(): string {
-            return weekDays[this.date.getDay()];
-        }
+    },
+    methods: {
+        daysClasses(date: Date): Record<string, any>[] {
+            return this.courses[date.toDateString()];
+        },
     },
     components: {
         IonList,
-        IonListHeader,
-        IonText,
-    }
+        ScheduledClass,
+    },
 });
 </script>
 
 <style scoped>
-    .day {
-        border: 1px solid red;
-        height: 100%;
-    }
-    ion-text {
-        width: 100%;
-    }
+.cal-day {
+    height: 100%;
+}
+
+.day {
+    position: relative;
+    /*border: 1px solid red;*/
+    /*background: var(--ion-color-light);*/
+    height: calc(100% - 2rem);
+}
+
+.hour {
+    border-top: 1px solid var(--ion-color-light-contrast);
+}
+
+ion-text {
+    width: 100%;
+}
 </style>

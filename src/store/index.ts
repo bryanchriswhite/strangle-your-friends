@@ -1,10 +1,22 @@
 import {createStore} from 'vuex';
 
-import classData from '@/classes.json'
+import courseData from '@/courses.json'
 
-const classes: Record<string, any> = {};
-classData.forEach(c => {
-    const {name, slots, bookedParticipants, maxParticipants} = c;
+export type Course = Record<string, any>;
+export type Courses = Record<string, Course>;
+
+declare interface RootState {
+    startDayHour: number,
+    endDayHour: number,
+    courses: Courses
+}
+
+const defaultStartDayHour = 11
+const defaultEndDayHour = 22
+
+const courses: Courses = {};
+courseData.forEach(c => {
+    const {id, name, slots, bookedParticipants, maxParticipants} = c;
     const {startDateTime, endDateTime, employees} = slots[0];
 
     const start = new Date(startDateTime.split('[')[0]);
@@ -13,10 +25,11 @@ classData.forEach(c => {
             `${employees[0].firstname} ${employees[0].lastname}`;
 
     const dateKey = start.toDateString();
-    if (typeof(classes[dateKey]) === 'undefined') {
-        classes[dateKey] = [];
+    if (typeof(courses[dateKey]) === 'undefined') {
+        courses[dateKey] = [];
     }
-    classes[dateKey].push({
+    courses[dateKey].push({
+        id,
         name,
         start,
         end,
@@ -25,16 +38,24 @@ classData.forEach(c => {
         maxParticipants,
     });
 })
-console.log(classes);
-
-(window as unknown as any).classes = classes;
+console.log(courses);
 
 
 const store = createStore({
-    state() {
+    state(): RootState {
         return {
-            classes,
+            courses,
+            endDayHour: defaultEndDayHour,
+            startDayHour: defaultStartDayHour,
         }
+    },
+    getters: {
+        dayLengthHours: (state: RootState): number => {
+            return state.endDayHour - state.startDayHour;
+        },
+        dayLengthSeconds: (state: RootState): number => {
+            return (state.endDayHour - state.startDayHour) * 60 * 60;
+        },
     },
     mutations: {
 
