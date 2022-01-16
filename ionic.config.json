@@ -1,0 +1,7 @@
+{
+  "name": "strangle-your-friends",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
