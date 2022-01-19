@@ -17,22 +17,6 @@
             </ion-header>
 
             <div class="container">
-                <ion-grid id="hours">
-                    <ion-row>
-                        <ion-col>
-                            <ion-list>
-                                <ion-item class="hour" v-for="hour in hours" :key="hour">
-                                    <ion-text class="hour-text">
-                                        {{ hour }}
-                                    </ion-text>
-                                    <ion-text class="minute-text">
-                                        00
-                                    </ion-text>
-                                </ion-item>
-                            </ion-list>
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
                 <ion-grid id="schedule">
 <!--                    <ion-row>-->
 <!--                        <ion-col v-for="day in dateRangeFrom(today, 5)" :key="day.getTime()"-->
@@ -43,7 +27,7 @@
                     <ion-row id="cal">
                         <!--                calendar-->
                         <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="2">
-                            <CalDay :date="today"></CalDay>
+                            <CalDay :show_hours="true" :date="today"></CalDay>
                         </ion-col>
                         <ion-col class="ion-hide-xs-down"
                                  size-sm="4" size-md="3" size-lg="2">
@@ -133,7 +117,6 @@ export default defineComponent({
         IonGrid,
         IonRow,
         IonCol,
-        IonText,
         CalDay,
     },
     setup: () => {
@@ -158,15 +141,9 @@ export default defineComponent({
     flex-grow: 12;
 }
 
-.hour-text {
-    width: auto;
-    font-size: 1rem;
-    /*transform: translateY(-10px);*/
+#schedule ion-col {
+    padding: 0;
+    /*margin: 3px;*/
 }
 
-.minute-text {
-    width: auto;
-    font-size: .75rem;
-    /*transform: translateY(-15px);*/
-}
 </style>

@@ -4,27 +4,42 @@
                         :key="course.id"
                         :course="course"
         ></ScheduledClass>
-        <ion-grid>
+        <ion-grid class="hours">
             <ion-row>
-                <ion-col></ion-col>
+                <ion-col>
+                    <ion-list>
+                        <ion-item class="hour" v-for="hour in hours" :key="hour">
+                            <div v-show="show_hours" >
+                                <ion-text class="hour-text">
+                                    {{ hour }}
+                                </ion-text>
+                                <ion-text class="minute-text">
+                                    00
+                                </ion-text>
+                            </div>
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
             </ion-row>
         </ion-grid>
-        <ion-list class="day">
-            <ion-item class="hour" v-for="hour in hours" :key="hour">
-            </ion-item>
-        </ion-list>
     </div>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
 import {mapState} from "vuex";
-import {IonList} from "@ionic/vue";
+import {
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonText,
+    IonList,
+} from "@ionic/vue";
 import ScheduledClass from '@/components/ScheduledClass.vue';
 
 export default defineComponent({
     name: 'CalDay',
-    props: ['date'],
+    props: ['show_hours', 'date'],
     computed: {
         ...mapState(['courses', 'endDayHour', 'startDayHour']),
         hours(): string[] {
@@ -41,6 +56,10 @@ export default defineComponent({
         },
     },
     components: {
+        IonGrid,
+        IonRow,
+        IonCol,
+        IonText,
         IonList,
         ScheduledClass,
     },
@@ -65,5 +84,21 @@ export default defineComponent({
 
 ion-text {
     width: 100%;
+}
+
+.hours, .hours ion-col {
+    padding: 0;
+}
+
+.hour-text {
+    width: auto;
+    font-size: 1rem;
+    /*transform: translateY(-10px);*/
+}
+
+.minute-text {
+    width: auto;
+    font-size: .75rem;
+    /*transform: translateY(-15px);*/
 }
 </style>

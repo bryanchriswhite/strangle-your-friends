@@ -24,7 +24,7 @@ export default defineComponent({
     computed: {
         ...mapState(['startDayHour']),
         ...mapGetters(['dayLengthHours', 'dayLengthSeconds']),
-        dayBeginUnix(): Date {
+        dayBeginUnix(): number {
             const now = new Date();
             const dayBegin  =new Date(
                     now.getFullYear(),
